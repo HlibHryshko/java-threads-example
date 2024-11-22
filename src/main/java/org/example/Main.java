@@ -37,7 +37,16 @@ public class Main {
         stoppableRunnable.requestStop();
         System.out.println("Stop has been requested");
 
-        
+        Thread thread5 = new Thread(new MyRunnable(), "Thread 5");
+
+        thread5.setDaemon(true);
+        thread5.start();
+
+        try {
+            thread5.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
     }
 }
