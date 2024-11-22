@@ -1,5 +1,8 @@
 package org.example;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Main {
     public static void main(String[] args) {
         Thread thread1 = new MyThread();
@@ -37,6 +40,36 @@ public class Main {
         stoppableRunnable.requestStop();
         System.out.println("Stop has been requested");
 
+        List<Thread> vThreads = new ArrayList<>();
+
+        int vThreadCount = 100000;
+
+        for (int i = 0; i < vThreadCount; i++) {
+            int vThreadIndex = i;
+
+            Thread vThread = Thread.ofVirtual().start(() -> {
+                int result = 1;
+
+                for (int j = 0; j < 10; j++) {
+                    result *= (j + 1);
+                }
+
+                System.out.println("Result[" + vThreadIndex + "]: " + result);
+            });
+
+            vThreads.add(vThread);
+        }
+
+        vThreads.forEach(
+              vThread -> {
+                  try {
+                      vThread.join();
+                  } catch (InterruptedException e) {
+                      e.printStackTrace();
+                  }
+              }
+        );
+
         Thread thread5 = new Thread(new MyRunnable(), "Thread 5");
 
         thread5.setDaemon(true);
@@ -49,4 +82,6 @@ public class Main {
         }
 
     }
+
+
 }
